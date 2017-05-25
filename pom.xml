@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.zachdeibert</groupId>
-  <artifactId>maven-dependency-plugin</artifactId>
+  <artifactId>dependency-runtime-maven-plugin</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>maven-dependency-plugin Maven Plugin</name>
+  <name>Dependency Runtime Maven Plugin</name>
 
   <!-- FIXME change it to the project's website -->
   <url>http://maven.apache.org</url>
@@ -52,7 +52,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <goalPrefix>maven-dependency-plugin</goalPrefix>
+          <goalPrefix>dependency-runtime-maven-plugin</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>

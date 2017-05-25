@@ -64,7 +64,7 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 		}
 		File temp;
 		try {
-			temp = File.createTempFile("maven-dependency-plugin-", ".jar");
+			temp = File.createTempFile("dependency-runtime-maven-plugin-", ".jar");
 		} catch (IOException ex) {
 			getLog().error(ex);
 			throw new MojoFailureException("Unable to create temporary file");
