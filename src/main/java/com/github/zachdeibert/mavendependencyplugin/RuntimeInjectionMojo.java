@@ -34,14 +34,16 @@ import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 
 @Mojo(name = "inject-runtime", defaultPhase = LifecyclePhase.PACKAGE)
 public class RuntimeInjectionMojo extends AbstractMojo {
-	@Parameter(defaultValue = "${project}")
+	@Parameter(defaultValue = "${project}", required = true)
 	private MavenProject project;
 	@Component
 	private ArtifactResolver artifactResolver;
-	@Parameter(defaultValue = "${session}")
+	@Parameter(defaultValue = "${session}", required = true)
 	private MavenSession session;
 	@Component
 	private ArtifactHandlerManager artifactHandlerManager;
+	@Parameter(defaultValue = Artifact.RELEASE_VERSION)
+	private String runtimeVersion;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File target = project.getArtifact().getFile();
@@ -54,7 +56,7 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 					session.getProjectBuildingRequest());
 			buildingRequest.setRemoteRepositories(project.getRemoteArtifactRepositories());
 			Artifact artifact = new DefaultArtifact("com.github.zachdeibert", "maven-dependency-runtime",
-					"1.0.0-SNAPSHOT", Artifact.SCOPE_RUNTIME, "jar", null,
+					runtimeVersion, Artifact.SCOPE_RUNTIME, "jar", null,
 					artifactHandlerManager.getArtifactHandler("jar"));
 			ArtifactResult res = artifactResolver.resolveArtifact(buildingRequest, artifact);
 			runtime = res.getArtifact().getFile();
