@@ -75,7 +75,7 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
-					<goalPrefix>dependency-runtime-maven-plugin</goalPrefix>
+					<goalPrefix>dependency-runtime</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>
 				<executions>
