@@ -32,21 +32,63 @@ import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 
+/**
+ * The main mojo that injects the runtime code into a jar so it can download
+ * everything automatically
+ * 
+ * @author Zach Deibert
+ * @since 1.0.0
+ */
 @Mojo(name = "inject-runtime", defaultPhase = LifecyclePhase.PACKAGE)
 public class RuntimeInjectionMojo extends AbstractMojo {
+	/**
+	 * The Maven project
+	 * 
+	 * @since 1.0.0
+	 */
 	@Parameter(defaultValue = "${project}", required = true)
 	private MavenProject project;
+	/**
+	 * The artifact resolver
+	 * 
+	 * @since 1.0.0
+	 */
 	@Component
 	private ArtifactResolver artifactResolver;
+	/**
+	 * The Maven session
+	 * 
+	 * @since 1.0.0
+	 */
 	@Parameter(defaultValue = "${session}", required = true)
 	private MavenSession session;
+	/**
+	 * The class that manages the artifact handlers
+	 * 
+	 * @since 1.0.0
+	 */
 	@Component
 	private ArtifactHandlerManager artifactHandlerManager;
+	/**
+	 * The version of the runtime library to use
+	 * 
+	 * @since 1.0.0
+	 */
 	@Parameter(defaultValue = Artifact.RELEASE_VERSION)
 	private String runtimeVersion;
+	/**
+	 * The class that should be called after the dependencies are set up
+	 * 
+	 * @since 1.0.0
+	 */
 	@Parameter
 	private String mainClass;
 
+	/**
+	 * Runs the mojo
+	 * 
+	 * @since 1.0.0
+	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File target = project.getArtifact().getFile();
 		if (!target.exists()) {
@@ -161,6 +203,18 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 		}
 	}
 
+	/**
+	 * Copies all remaining data from the <code>in</code> stream into the
+	 * <code>out</code> stream.
+	 * 
+	 * @param in
+	 *            The stream to copy from
+	 * @param out
+	 *            The stream to copy to
+	 * @since 1.0.0
+	 * @throws IOException
+	 *             If an I/O error has occurred
+	 */
 	private void copyStream(InputStream in, OutputStream out) throws IOException {
 		byte[] buffer = new byte[4096];
 		for (int read = in.read(buffer); read > 0; read = in.read(buffer)) {
@@ -168,6 +222,20 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 		}
 	}
 
+	/**
+	 * Copies all files from one jar to another unless they already exist in the
+	 * output jar
+	 * 
+	 * @param in
+	 *            The jar to copy files from
+	 * @param out
+	 *            The jar to copy files to
+	 * @param files
+	 *            The set of all files that already exist in the output jar
+	 * @since 1.0.0
+	 * @throws IOException
+	 *             If an I/O error has occurred
+	 */
 	private void copyFiles(JarInputStream in, JarOutputStream out, Set<String> files) throws IOException {
 		JarEntry entry;
 		while ((entry = in.getNextJarEntry()) != null) {
