@@ -44,6 +44,8 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 	private ArtifactHandlerManager artifactHandlerManager;
 	@Parameter(defaultValue = Artifact.RELEASE_VERSION)
 	private String runtimeVersion;
+	@Parameter
+	private String mainClass;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File target = project.getArtifact().getFile();
@@ -85,10 +87,14 @@ public class RuntimeInjectionMojo extends AbstractMojo {
 				throw new MojoFailureException("No manifest found in jar");
 			}
 			Attributes attr = manifest.getMainAttributes();
-			if (!attr.containsKey(Attributes.Name.MAIN_CLASS)) {
-				throw new MojoFailureException("Main class not specified");
+			if (mainClass == null) {
+				if (!attr.containsKey(Attributes.Name.MAIN_CLASS)) {
+					throw new MojoFailureException("Main class not specified");
+				}
+				attr.putValue("Real-Main-Class", attr.get(Attributes.Name.MAIN_CLASS).toString());
+			} else {
+				attr.putValue("Real-Main-Class", mainClass);
 			}
-			attr.putValue("Real-Main-Class", attr.get(Attributes.Name.MAIN_CLASS).toString());
 			attr.put(Attributes.Name.MAIN_CLASS, "com.github.zachdeibert.mavendependencyruntime.Main");
 			ostream = new FileOutputStream(temp);
 			ojar = new JarOutputStream(ostream, manifest);
